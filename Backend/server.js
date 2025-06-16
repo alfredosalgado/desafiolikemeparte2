@@ -1,7 +1,9 @@
+// backend/server.js
+
 import express from 'express';
 import cors from 'cors';
-import { getPostsController, createPostController, updatePostLikesController, deletePostController } from './controllers/posts.controller.js';
 import 'dotenv/config';
+import postsRouter from './routes/posts.routes.js'; // <-- Importé el router
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -11,16 +13,8 @@ app.use(cors());
 app.use(express.json());
 
 // --- RUTAS ---
-app.get('/posts', getPostsController);
-app.post('/posts', createPostController);
-
-// --- NUEVA RUTA PUT (para likes) ---
-// Nota: El frontend llama a /posts/like/:id, por eso la ruta es asi.
-app.put('/posts/like/:id', updatePostLikesController);
-
-// --- NUEVA RUTA DELETE ---
-app.delete('/posts/:id', deletePostController);
-
+// 2. Usamos el router como un middleware.
+app.use('/', postsRouter); 
 
 // Iniciar el servidor
 app.listen(PORT, () => {
